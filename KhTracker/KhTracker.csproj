@@ -87,6 +87,7 @@
     <Compile Include="AutoTracking\Ability.cs" />
     <Compile Include="AutoTracking\AutoTracker.cs" />
     <Compile Include="AutoTracking\CheckEveryCheck.cs" />
+    <Compile Include="AutoTracking\Extra.cs" />
     <Compile Include="AutoTracking\Visit.cs" />
     <Compile Include="Core\HintModes.cs" />
     <Compile Include="AutoTracking\Magic.cs" />
@@ -541,6 +542,7 @@
   <ItemGroup>
     <Content Include="CustomImages\Broadcast\Checks\aerial.png" />
     <Content Include="CustomImages\Broadcast\Checks\AncestorSword.png" />
+    <Content Include="CustomImages\Broadcast\Checks\anti.png" />
     <Content Include="CustomImages\Broadcast\Checks\BattlefieldsofWar.png" />
     <Content Include="CustomImages\Broadcast\Checks\BeastClaw.png" />
     <Content Include="CustomImages\Broadcast\Checks\blizzard.png" />
@@ -625,6 +627,7 @@
     <Content Include="CustomImages\Checks\ansem_report11.png" />
     <Content Include="CustomImages\Checks\ansem_report12.png" />
     <Content Include="CustomImages\Checks\ansem_report13.png" />
+    <Content Include="CustomImages\Checks\anti.png" />
     <Content Include="CustomImages\Checks\BattlefieldsofWar.png" />
     <Content Include="CustomImages\Checks\BeastClaw.png" />
     <Content Include="CustomImages\Checks\blizzard.png" />
@@ -649,6 +652,7 @@
     <Content Include="CustomImages\Checks\Ghost\ansem_report11.png" />
     <Content Include="CustomImages\Checks\Ghost\ansem_report12.png" />
     <Content Include="CustomImages\Checks\Ghost\ansem_report13.png" />
+    <Content Include="CustomImages\Checks\Ghost\anti.png" />
     <Content Include="CustomImages\Checks\Ghost\BattlefieldsofWar.png" />
     <Content Include="CustomImages\Checks\Ghost\BeastClaw.png" />
     <Content Include="CustomImages\Checks\Ghost\blizzard.png" />
@@ -665,6 +669,7 @@
     <Content Include="CustomImages\Checks\Ghost\magnet.png" />
     <Content Include="CustomImages\Checks\Ghost\master.png" />
     <Content Include="CustomImages\Checks\Ghost\membership_card.png" />
+    <Content Include="CustomImages\Checks\Ghost\olympus_stone.png" />
     <Content Include="CustomImages\Checks\Ghost\once_more.png" />
     <Content Include="CustomImages\Checks\Ghost\peter_pan.png" />
     <Content Include="CustomImages\Checks\Ghost\Picture.png" />
@@ -862,6 +867,10 @@
     <Content Include="CustomImages\Worlds\Synth.png" />
     <Content Include="CustomImages\Worlds\the_world_that_never_was.png" />
     <Content Include="CustomImages\Worlds\twilight_town.png" />
+    <Resource Include="Images\Checks\Old\anti.png" />
+    <Resource Include="Images\Checks\Simple\anti.png" />
+    <Resource Include="Images\Checks\Old\UnknownDisk.png" />
+    <Resource Include="Images\Checks\Simple\UnknownDisk.png" />
     <Resource Include="Images\Other\generic skull.png" />
     <Resource Include="Images\Other\crossworld.png" />
     <Resource Include="Images\Other\cross.png" />

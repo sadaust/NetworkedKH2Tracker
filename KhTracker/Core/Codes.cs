@@ -226,7 +226,6 @@ namespace KhTracker
             {593, "Connection"},
             {594, "Nonexistence"},
             {595, "Peace"},
-
             {54, "AuronWep"},
             {55, "MulanWep"},
             {59, "BeastWep"},
@@ -238,6 +237,10 @@ namespace KhTracker
             {369, "MembershipCard"},
             {375, "IceCream"},
             {376, "Picture"},
+            {30, "Anti"},
+            {537, "HadesCup"},
+            {370, "OlympusStone"},
+            {462, "UnknownDisk"},
 
         };
 
@@ -273,21 +276,27 @@ namespace KhTracker
             {"Report11", "report"},
             {"Report12", "report"},
             {"Report13", "report"},
+            {"Fire", "magic"},
             {"Fire1", "magic"},
             {"Fire2", "magic"},
             {"Fire3", "magic"},
+            {"Blizzard", "magic"},
             {"Blizzard1", "magic"},
             {"Blizzard2", "magic"},
             {"Blizzard3", "magic"},
+            {"Thunder", "magic"},
             {"Thunder1", "magic"},
             {"Thunder2", "magic"},
             {"Thunder3", "magic"},
+            {"Cure", "magic"},
             {"Cure1", "magic"},
             {"Cure2", "magic"},
             {"Cure3", "magic"},
+            {"Reflect", "magic"},
             {"Reflect1", "magic"},
             {"Reflect2", "magic"},
             {"Reflect3", "magic"},
+            {"Magnet", "magic"},
             {"Magnet1", "magic"},
             {"Magnet2", "magic"},
             {"Magnet3", "magic"},
@@ -298,6 +307,7 @@ namespace KhTracker
             {"Final", "form"},
             {"OnceMore", "ability"},
             {"SecondChance", "ability"},
+            {"TornPage", "page"},
             {"TornPage1", "page"},
             {"TornPage2", "page"},
             {"TornPage3", "page"},
@@ -322,6 +332,10 @@ namespace KhTracker
             {"MembershipCard", "visit"},
             {"IceCream", "visit"},
             {"Picture", "visit"},
+            {"Anti", "form"},
+            {"HadesCup", "other"},
+            {"OlympusStone", "other"},
+            {"UnknownDisk", "other"},
             //ghost versions
             {"Ghost_Report1", "report"},
             {"Ghost_Report2", "report"},
@@ -385,6 +399,10 @@ namespace KhTracker
             {"Ghost_MembershipCard", "visit"},
             {"Ghost_IceCream", "visit"},
             {"Ghost_Picture", "visit"},
+            {"Ghost_Anti", "form"},
+            {"Ghost_HadesCup", "other"},
+            {"Ghost_OlympusStone", "other"},
+            {"Ghost_UnknownDisk", "other"},
             //seedgen names
             {"Fire Element", "magic"},
             {"Blizzard Element", "magic"},
@@ -430,7 +448,11 @@ namespace KhTracker
             {"Scimitar (Aladdin)", "visit"},
             {"Identity Disk (Tron)", "visit"},
             {"Membership Card", "visit"},
-            {"Ice Cream", "visit"}
+            {"Ice Cream", "visit"},
+            {"Anti-Form", "form"},
+            {"Hades Cup Trophy", "other"},
+            {"Olympus Stone", "other"},
+            {"Unknown Disk", "other"}
         };
 
         public static Dictionary<string, string> convertItemNames = new Dictionary<string, string>()
@@ -448,7 +470,6 @@ namespace KhTracker
             {"Secret Ansem's Report 11", "Report11"},
             {"Secret Ansem's Report 12", "Report12"},
             {"Secret Ansem's Report 13", "Report13"},
-            {"Hades Cup Trophy", "HadesCup"},
             {"Valor Form", "Valor"},
             {"Wisdom Form", "Wisdom"},
             {"Limit Form", "Limit"},
@@ -474,7 +495,11 @@ namespace KhTracker
             {"Identity Disk (Tron)", "TronWep"},
             {"Membership Card", "MembershipCard"},
             {"Ice Cream", "IceCream"},
-            {"Picture", "Picture"}
+            {"Picture", "Picture"},
+            {"Anti-Form", "Anti"},
+            {"Hades Cup Trophy", "HadesCup"},
+            {"Olympus Stone", "OlympusStone"},
+            {"Unknown Disk", "UnknownDisk"}
         };
 
         public static Dictionary<string, string> convertOpenKH = new Dictionary<string, string>()
@@ -542,10 +567,15 @@ namespace KhTracker
             {"Membership Card", "MembershipCard"},
             {"Ice Cream", "IceCream"},
             {"Picture", "Picture"},
+            {"Anti-Form", "Anti"},
+            {"Hades Cup Trophy", "HadesCup"},
+            {"Olympus Stone", "OlympusStone"},
+            {"Unknown Disk", "UnknownDisk"},
             {"Garden of Assemblage", "GoA"},
             {"", "GoA"},
             {"Critical Bonuses", "GoA"},
-            {"Creations", "PuzzSynth"}
+            {"Creations", "PuzzSynth"},
+            {"Empty", "Empty"}
         };
 
         //Code Lists

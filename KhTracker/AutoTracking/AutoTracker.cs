@@ -44,6 +44,7 @@ namespace KhTracker
         private DriveForm master;
         private DriveForm limit;
         private DriveForm final;
+        private DriveForm anti;
 
         private Magic fire;
         private Magic blizzard;
@@ -90,6 +91,7 @@ namespace KhTracker
         private Summon charmItem;
         private ImportantCheck proofItem;
         private ImportantCheck visitItem;
+        private ImportantCheck extraItem;
 
         private TornPage pages;
 
@@ -334,6 +336,7 @@ namespace KhTracker
             importantChecks.Add(limit = new DriveForm(memory, Save + 0x36CA, ADDRESS_OFFSET, 3, Save + 0x3366, "Limit"));
             importantChecks.Add(master = new DriveForm(memory, Save + 0x36C0, ADDRESS_OFFSET, 6, Save + 0x339E, "Master"));
             importantChecks.Add(final = new DriveForm(memory, Save + 0x36C0, ADDRESS_OFFSET, 4, Save + 0x33D6, "Final"));
+            importantChecks.Add(anti = new DriveForm(memory, Save + 0x36C0, ADDRESS_OFFSET, 5, Save + 0x340C, "Anti"));
 
             int fireCount = fire != null ? fire.Level : 0;
             int blizzardCount = blizzard != null ? blizzard.Level : 0;
@@ -391,6 +394,10 @@ namespace KhTracker
             importantChecks.Add(visitItem = new Visit(memory, Save + 0x3643, ADDRESS_OFFSET, "MembershipCard"));
             importantChecks.Add(visitItem = new Visit(memory, Save + 0x3649, ADDRESS_OFFSET, "IceCream"));
             importantChecks.Add(visitItem = new Visit(memory, Save + 0x364A, ADDRESS_OFFSET, "Picture"));
+
+            importantChecks.Add(extraItem = new Extra(memory, Save + 0x3696, ADDRESS_OFFSET, "HadesCup"));
+            importantChecks.Add(extraItem = new Extra(memory, Save + 0x3644, ADDRESS_OFFSET, "OlympusStone"));
+            importantChecks.Add(extraItem = new Extra(memory, Save + 0x365F, ADDRESS_OFFSET, "UnknownDisk"));
 
             int count = pages != null ? pages.Quantity : 0;
             importantChecks.Add(pages = new TornPage(memory, Save + 0x3598, ADDRESS_OFFSET, "TornPage"));
@@ -684,46 +691,40 @@ namespace KhTracker
 
         private void TrackItem(string itemName, WorldGrid world)
         {
-            foreach (ContentControl item in ItemPool.Children)
+            if (!GetItemPool.ContainsKey(itemName))
+                return;
+
+            Grid ItemRow = VisualTreeHelper.GetChild(ItemPool, GetItemPool[itemName]) as Grid;
+
+            foreach (ContentControl item in ItemRow.Children)
             {
-                if (data.mode == Mode.DAHints)
+                if (item.Name == itemName && item.IsVisible)
                 {
-                    if (item.Name == itemName && item.IsVisible)
+                    bool ReportType;
+                    if (data.mode == Mode.DAHints)
                     {
-                        if (world.Handle_PointReport(item as Item, this, data))
-                        {
-                            world.Add_Item(item as Item, this);
-                            if (App.logger != null)
-                                App.logger.Record(item.Name + " tracked");
-                        }
-                        break;
+                        ReportType = world.Handle_PointReport(item as Item, this, data);
                     }
-                }
-                else if (data.mode == Mode.PathHints)
-                {
-                    if (item.Name == itemName && item.IsVisible)
+                    else if (data.mode == Mode.PathHints)
                     {
-                        if (world.Handle_PathReport(item as Item, this, data))
-                        {
-                            world.Add_Item(item as Item, this);
-                            if (App.logger != null)
-                                App.logger.Record(item.Name + " tracked");
-                        }
-                        break;
+                        ReportType = world.Handle_PathReport(item as Item, this, data);
                     }
-                }
-                else
-                {
-                    if (item.Name == itemName && item.IsVisible)
+                    else if (data.mode == Mode.SpoilerHints)
                     {
-                        if (world.Handle_Report(item as Item, this, data))
-                        {
-                            world.Add_Item(item as Item, this);
-                            if (App.logger != null)
-                                App.logger.Record(item.Name + " tracked");
-                        }
-                        break;
+                        ReportType = world.Handle_SpoilerReport(item as Item, this, data);
                     }
+                    else
+                    {
+                        ReportType = world.Handle_Report(item as Item, this, data);
+                    }
+
+                    if (ReportType)
+                    {
+                        world.Add_Item(item as Item, this);
+                        if (App.logger != null)
+                            App.logger.Record(item.Name + " tracked");
+                    }
+                    break;
                 }
             }
         }
@@ -1789,7 +1790,7 @@ namespace KhTracker
             UpdatePointScore(0);
         }
 
-        private void Updatenumbers()
+        public void Updatenumbers()
         {
             //get correct slash image
             bool CustomMode = Properties.Settings.Default.CustomIcons;
@@ -1805,9 +1806,11 @@ namespace KhTracker
                 bool isBlue = false;
                 bool isGreen = false;
 
+                string test = worldData.world.Name;
+
                 if (worldData.complete || worldData.hintedHint)
                     isBlue = true;
-                if (worldData.containsGhost && data.mode == Mode.DAHints)
+                if (worldData.containsGhost && (data.mode == Mode.DAHints || data.mode == Mode.SpoilerHints))
                     isGreen = true;
 
                 if (worldData.hint != null)
@@ -1818,7 +1821,8 @@ namespace KhTracker
                     {
                         SetWorldNumber(worldData.hint, WorldNumber, "G");
                     }
-                    else if (isBlue)
+
+                    if (isBlue)
                     {
                         SetWorldNumber(worldData.hint, WorldNumber, "B");
                     }
@@ -1915,9 +1919,9 @@ namespace KhTracker
             if (ps2)
             {
                 //reminder: FFFF = unloaded)
-                string Jounal = BytesToHex(memory.ReadMemory(0x35F144, 2)); //in journal
+                string Jounal = BytesToHex(memory.ReadMemory(0x035F144 + ADDRESS_OFFSET, 2)); //in journal
                 //reminder: FF = none | 01 = save menu | 03 = load menu | 05 = moogle | 07 = item popup | 08 = pause menu (cutscene/fight) | 0A = pause Menu (normal)
-                string menu = BytesToHex(memory.ReadMemory(0x35F2EC, 2)); //in a menu
+                string menu = BytesToHex(memory.ReadMemory(0x035F2EC + ADDRESS_OFFSET, 2)); //in a menu
 
                 if ((Jounal == "FFFF" && menu == "0500") || (Jounal != "FFFF" && menu == "0A00")) // in moogle shop / in puzzle menu
                 {
@@ -1941,10 +1945,14 @@ namespace KhTracker
 
         private void DeathCheck(bool ps2)
         {
+            //Note: 04 = dying, 05 = continue screen.
+            //note: if i try tracking a death when pausecheck is "0400" then that should give a
+            //more accurate death count in the event that continue is selected too fast (i hope)
+
             string PauseCheck;
             if (ps2)
             {
-                PauseCheck = BytesToHex(memory.ReadMemory(0x347E08, 2));
+                PauseCheck = BytesToHex(memory.ReadMemory(0x0347E08 + ADDRESS_OFFSET, 2));
             }
             else
             {
@@ -1953,13 +1961,13 @@ namespace KhTracker
 
             if (onContinue)
             {
-                if (PauseCheck == "0500")
+                if (PauseCheck == "0400" || PauseCheck == "0500")
                     return;
                 else
                     onContinue = false;
             }
 
-            if (PauseCheck == "0500")
+            if (PauseCheck == "0400" || PauseCheck == "0500")
             {
                 DeathCounter += 1;
                 onContinue = true;

@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
 using System.Linq;
+using System.Collections.Generic;
 using System.Windows.Data;
 using System.IO;
 
@@ -23,7 +24,7 @@ namespace KhTracker
                     IncrementTotal();
                 }
             }
-            else if (toggle == false && button.IsEnabled == true)
+            else if (toggle == false && button.IsEnabled)
             {
                 button.IsEnabled = false;
                 button.Visibility = Visibility.Hidden;
@@ -103,11 +104,15 @@ namespace KhTracker
             PromiseCharmOption.IsChecked = toggle;
             if (toggle)
             {
+                Pr_PromiseCharm.Width = new GridLength(1.0, GridUnitType.Star);
+
                 broadcast.PromiseCharm.Visibility = Visibility.Visible;
                 broadcast.PromiseCharmCol.Width = new GridLength(1.0, GridUnitType.Star);
             }
             else
             {
+                Pr_PromiseCharm.Width = new GridLength(0, GridUnitType.Star);
+
                 broadcast.PromiseCharm.Visibility = Visibility.Hidden;
                 broadcast.PromiseCharmCol.Width = new GridLength(0, GridUnitType.Star);
             }
@@ -200,16 +205,81 @@ namespace KhTracker
             AbilitiesOption.IsChecked = toggle;
             if (toggle)
             {
+                Ab_OnceMore.Width = new GridLength(1.0, GridUnitType.Star);
+                Ab_SecondChance.Width = new GridLength(1.0, GridUnitType.Star);
+
                 broadcast.SecondChanceCol.Width = new GridLength(1.0, GridUnitType.Star);
                 broadcast.OnceMoreCol.Width = new GridLength(1.0, GridUnitType.Star);
             }
             else
             {
+                Ab_OnceMore.Width = new GridLength(0, GridUnitType.Star);
+                Ab_SecondChance.Width = new GridLength(0, GridUnitType.Star);
+
                 broadcast.SecondChanceCol.Width = new GridLength(0, GridUnitType.Star);
                 broadcast.OnceMoreCol.Width = new GridLength(0, GridUnitType.Star);
             }
             HandleItemToggle(toggle, OnceMore, false);
             HandleItemToggle(toggle, SecondChance, false);
+        }
+
+        private void AntiFormToggle(object sender, RoutedEventArgs e)
+        {
+            AntiFormToggle(AntiFormOption.IsChecked);
+        }
+
+        private void AntiFormToggle(bool toggle)
+        {
+            Properties.Settings.Default.AntiForm = toggle;
+            AntiFormOption.IsChecked = toggle;
+            HandleItemToggle(toggle, Anti, false);
+
+            if(toggle)
+            {
+                Ex_Anti.Width = new GridLength(1.0, GridUnitType.Star);
+                broadcast.Ex_Anti.Width = new GridLength(2.0, GridUnitType.Star);
+            }
+            else
+            {
+                Ex_Anti.Width = new GridLength(0, GridUnitType.Star);
+                broadcast.Ex_Anti.Width = new GridLength(0, GridUnitType.Star);
+            }
+        }
+
+        private void ExtraChecksToggle(object sender, RoutedEventArgs e)
+        {
+            ExtraChecksToggle(ExtraChecksOption.IsChecked);
+        }
+
+        private void ExtraChecksToggle(bool toggle)
+        {
+            Properties.Settings.Default.ExtraChecks = toggle;
+            ExtraChecksOption.IsChecked = toggle;
+
+            HandleItemToggle(toggle, HadesCup, false);
+            HandleItemToggle(toggle, OlympusStone, false);
+            HandleItemToggle(toggle, UnknownDisk, false);
+
+            if (toggle)
+            {
+                Ex_HadesCup.Width = new GridLength(1.0, GridUnitType.Star);
+                Ex_OlympusStone.Width = new GridLength(1.0, GridUnitType.Star);
+                Ex_UnknownDisk.Width = new GridLength(1.0, GridUnitType.Star);
+
+                broadcast.Ex_HadesCup.Width = new GridLength(1.0, GridUnitType.Star);
+                broadcast.Ex_OlympusStone.Width = new GridLength(1.0, GridUnitType.Star);
+                broadcast.Ex_UnknownDisk.Width = new GridLength(1.0, GridUnitType.Star);
+            }
+            else
+            {
+                Ex_HadesCup.Width = new GridLength(0, GridUnitType.Star);
+                Ex_OlympusStone.Width = new GridLength(0, GridUnitType.Star);
+                Ex_UnknownDisk.Width = new GridLength(0, GridUnitType.Star);
+
+                broadcast.Ex_HadesCup.Width = new GridLength(0, GridUnitType.Star);
+                broadcast.Ex_OlympusStone.Width = new GridLength(0, GridUnitType.Star);
+                broadcast.Ex_UnknownDisk.Width = new GridLength(0, GridUnitType.Star);
+            }
         }
 
         //private void TornPagesToggle(object sender, RoutedEventArgs e)
@@ -504,9 +574,15 @@ namespace KhTracker
             Properties.Settings.Default.DragDrop = DragAndDropOption.IsChecked;
             data.dragDrop = DragAndDropOption.IsChecked;
 
+            List<Grid> itempools = new List<Grid>();
+            foreach (Grid pool in ItemPool.Children)
+            {
+                itempools.Add(pool);
+            }
+
             foreach (Item item in data.Items)
             {
-                if (item.Parent == ItemPool)
+                if (itempools.Contains(item.Parent))
                 {
                     if (data.dragDrop == false)
                     {
@@ -1059,6 +1135,11 @@ namespace KhTracker
                 AladdinWep.SetResourceReference(ContentProperty, "Min-AladdinWep");
                 SparrowWep.SetResourceReference(ContentProperty, "Min-SparrowWep");
 
+                HadesCup.SetResourceReference(ContentProperty, "Min-HadesCup");
+                OlympusStone.SetResourceReference(ContentProperty, "Min-OlympusStone");
+                UnknownDisk.SetResourceReference(ContentProperty, "Min-UnknownDisk");
+                Anti.SetResourceReference(ContentProperty, "Min-Anti");
+
                 broadcast.Report.SetResourceReference(ContentProperty, "Min-AnsemReport");
                 broadcast.TornPage.SetResourceReference(ContentProperty, "Min-TornPages");
                 broadcast.Chest.SetResourceReference(ContentProperty, "Min-Chest");
@@ -1104,6 +1185,11 @@ namespace KhTracker
                 broadcast.SimbaWep.SetResourceReference(ContentProperty, "Min-SimbaWep");
                 broadcast.AladdinWep.SetResourceReference(ContentProperty, "Min-AladdinWep");
                 broadcast.SparrowWep.SetResourceReference(ContentProperty, "Min-SparrowWep");
+
+                broadcast.HadesCup.SetResourceReference(ContentProperty, "Min-HadesCup");
+                broadcast.OlympusStone.SetResourceReference(ContentProperty, "Min-OlympusStone");
+                broadcast.UnknownDisk.SetResourceReference(ContentProperty, "Min-UnknownDisk");
+                broadcast.Anti.SetResourceReference(ContentProperty, "Min-Anti");
 
                 //ghost icons
                 Ghost_Fire1.SetResourceReference(ContentProperty, "Min-Fire");
@@ -1156,6 +1242,11 @@ namespace KhTracker
                 Ghost_SimbaWep.SetResourceReference(ContentProperty, "Min-SimbaWep");
                 Ghost_AladdinWep.SetResourceReference(ContentProperty, "Min-AladdinWep");
                 Ghost_SparrowWep.SetResourceReference(ContentProperty, "Min-SparrowWep");
+
+                Ghost_HadesCup.SetResourceReference(ContentProperty, "Min-HadesCup");
+                Ghost_OlympusStone.SetResourceReference(ContentProperty, "Min-OlympusStone");
+                Ghost_UnknownDisk.SetResourceReference(ContentProperty, "Min-UnknownDisk");
+                Ghost_Anti.SetResourceReference(ContentProperty, "Min-Anti");
 
                 ((Grid)((Grid)broadcast.Fire.Parent).Parent).RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
                 ((Grid)((Grid)broadcast.Fire.Parent).Parent).RowDefinitions[2].Height = new GridLength(1, GridUnitType.Star);
@@ -1250,6 +1341,11 @@ namespace KhTracker
                 AladdinWep.SetResourceReference(ContentProperty, "Old-AladdinWep");
                 SparrowWep.SetResourceReference(ContentProperty, "Old-SparrowWep");
 
+                HadesCup.SetResourceReference(ContentProperty, "Old-HadesCup");
+                OlympusStone.SetResourceReference(ContentProperty, "Old-OlympusStone");
+                UnknownDisk.SetResourceReference(ContentProperty, "Old-UnknownDisk");
+                Anti.SetResourceReference(ContentProperty, "Old-Anti");
+
                 broadcast.Report.SetResourceReference(ContentProperty, "Old-AnsemReport");
                 broadcast.TornPage.SetResourceReference(ContentProperty, "Old-TornPages");
                 broadcast.Chest.SetResourceReference(ContentProperty, "Old-Chest");
@@ -1295,6 +1391,11 @@ namespace KhTracker
                 broadcast.SimbaWep.SetResourceReference(ContentProperty, "Old-SimbaWep");
                 broadcast.AladdinWep.SetResourceReference(ContentProperty, "Old-AladdinWep");
                 broadcast.SparrowWep.SetResourceReference(ContentProperty, "Old-SparrowWep");
+
+                broadcast.HadesCup.SetResourceReference(ContentProperty, "Old-HadesCup");
+                broadcast.OlympusStone.SetResourceReference(ContentProperty, "Old-OlympusStone");
+                broadcast.UnknownDisk.SetResourceReference(ContentProperty, "Old-UnknownDisk");
+                broadcast.Anti.SetResourceReference(ContentProperty, "Old-Anti");
 
                 Ghost_Fire1.SetResourceReference(ContentProperty, "Old-Fire");
                 Ghost_Fire2.SetResourceReference(ContentProperty, "Old-Fire");
@@ -1346,6 +1447,11 @@ namespace KhTracker
                 Ghost_SimbaWep.SetResourceReference(ContentProperty, "Old-SimbaWep");
                 Ghost_AladdinWep.SetResourceReference(ContentProperty, "Old-AladdinWep");
                 Ghost_SparrowWep.SetResourceReference(ContentProperty, "Old-SparrowWep");
+
+                Ghost_HadesCup.SetResourceReference(ContentProperty, "Old-HadesCup");
+                Ghost_OlympusStone.SetResourceReference(ContentProperty, "Old-OlympusStone");
+                Ghost_UnknownDisk.SetResourceReference(ContentProperty, "Old-UnknownDisk");
+                Ghost_Anti.SetResourceReference(ContentProperty, "Old-Anti");
 
                 ((Grid)((Grid)broadcast.Fire.Parent).Parent).RowDefinitions[0].Height = new GridLength(1, GridUnitType.Star);
                 ((Grid)((Grid)broadcast.Fire.Parent).Parent).RowDefinitions[2].Height = new GridLength(1, GridUnitType.Star);
