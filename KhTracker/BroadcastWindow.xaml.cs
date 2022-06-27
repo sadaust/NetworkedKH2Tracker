@@ -192,15 +192,9 @@ namespace KhTracker
             //Get correct bar images
             bool CustomMode = Properties.Settings.Default.CustomIcons;
             BitmapImage NumberBartotals = data.SlashBarY;
-            //BitmapImage NumberBarG = data.SlashBarG;
-            //BitmapImage NumberBarB = data.SlashBarB;
             BitmapImage NumberBarY = data.SlashBarY;
             if (CustomMode)
             {
-                //if (MainWindow.CustomBarGFound)
-                //    NumberBarB = data.CustomSlashBarG;
-                //if (MainWindow.CustomBarBFound)
-                //    NumberBarB = data.CustomSlashBarB;
                 if (MainWindow.CustomBarYFound)
                     NumberBarY = data.CustomSlashBarY;
             }
@@ -228,7 +222,7 @@ namespace KhTracker
                 if (other.Key != "Report")
                 {
                     Image otherImage = this.FindName(other.Key + "Found") as Image;
-
+            
                     if (other.Value == 0 && other.Key != "TornPage")
                     {
                         otherImage.Source = null;
@@ -472,6 +466,13 @@ namespace KhTracker
 
         public void SetFoundNumber(Grid mainhint, Grid bhint)
         {
+            if (data.mode == Mode.Hints || data.mode == Mode.OpenKHHints)
+            {
+                string test = mainhint.Name;
+                SetFoundNumber_J(mainhint.Name.Substring(0, mainhint.Name.Length - 4), bhint);
+                return;
+            }
+
             int worldvalue = GetWorldNumber(mainhint);
             bool number10s = false;
             bool number100s = false;
@@ -588,6 +589,106 @@ namespace KhTracker
                 }
             }
         }
+
+        public void SetFoundNumber_J(string worldname, Grid bhint)
+        {
+            WorldGrid worldGrid = data.WorldsData[worldname].worldGrid;
+            int worldvalue = worldGrid.Children.Count;
+            bool number10s = false;
+            bool number100s = false;
+            if (worldvalue > 99) number100s = true;
+            if (worldvalue > 9) number10s = true;
+
+            //get ccorrect color and numbers
+            string color = "Y";
+            if(data.WorldsData[worldname].hintedHint || data.WorldsData[worldname].complete)
+                color = "B";
+
+            List<BitmapImage> foundNumbers = UpdateNumber(worldvalue, color);
+            ImageSource Num100 = foundNumbers[2]; ImageSource Num010 = foundNumbers[1]; ImageSource Num001 = foundNumbers[0];
+
+            //set broadcast found numbers
+            if (bhint != null)
+            {
+                int ChildCount = VisualTreeHelper.GetChildrenCount(bhint);
+                for (int i = 0; i < ChildCount; i++)
+                {
+                    var child = VisualTreeHelper.GetChild(bhint, i) as Image;
+
+                    if (child == null)
+                        continue;
+
+                    if (child is Image && child.Name.Equals(worldname + "Found_001"))
+                    {
+                        child.Source = Num001;
+                        continue;
+                    }
+                    if (child is Image && child.Name.Equals(worldname + "Found_010"))
+                    {
+                        child.Source = Num010;
+
+                        if (!number10s || child.Source.ToString().ToLower().EndsWith("questionmark.png"))
+                            bhint.ColumnDefinitions[2].Width = new GridLength(0.0, GridUnitType.Star);
+                        else
+                            bhint.ColumnDefinitions[2].Width = new GridLength(1.0, GridUnitType.Star);
+
+                        continue;
+                    }
+                    if (child is Image && child.Name.Equals(worldname + "Found_100"))
+                    {
+                        child.Source = Num100;
+
+                        if (!number100s || child.Source.ToString().ToLower().EndsWith("questionmark.png"))
+                            bhint.ColumnDefinitions[1].Width = new GridLength(0.0, GridUnitType.Star);
+                        else
+                            bhint.ColumnDefinitions[1].Width = new GridLength(1.0, GridUnitType.Star);
+
+                        continue;
+                    }
+                }
+            }
+            else
+            {
+                Grid broadcastG = this.FindName(worldname + "Hint") as Grid;
+                int ChildCount = VisualTreeHelper.GetChildrenCount(broadcastG);
+                for (int i = 0; i < ChildCount; i++)
+                {
+                    var child = VisualTreeHelper.GetChild(broadcastG, i) as Image;
+
+                    if (child == null)
+                        continue;
+
+                    if (child is Image && child.Name.Equals(worldname + "Found_001"))
+                    {
+                        child.Source = Num001;
+                        continue;
+                    }
+                    if (child is Image && child.Name.Equals(worldname + "Found_010"))
+                    {
+                        child.Source = Num010;
+
+                        if (!number10s || child.Source.ToString().ToLower().EndsWith("questionmark.png"))
+                            broadcastG.ColumnDefinitions[2].Width = new GridLength(0.0, GridUnitType.Star);
+                        else
+                            broadcastG.ColumnDefinitions[2].Width = new GridLength(1.0, GridUnitType.Star);
+
+                        continue;
+                    }
+                    if (child is Image && child.Name.Equals(worldname + "Found_100"))
+                    {
+                        child.Source = Num100;
+
+                        if (!number100s || child.Source.ToString().ToLower().EndsWith("questionmark.png"))
+                            broadcastG.ColumnDefinitions[1].Width = new GridLength(0.0, GridUnitType.Star);
+                        else
+                            broadcastG.ColumnDefinitions[1].Width = new GridLength(1.0, GridUnitType.Star);
+
+                        continue;
+                    }
+                }
+            }
+        }
+
 
         public void SetTotalNumber(Grid hintgrid, string color, int value)
         {

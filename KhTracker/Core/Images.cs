@@ -1038,6 +1038,75 @@ namespace KhTracker
                     broadcast.TwilightTownLock_1.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/visitlocksilver.png", UriKind.Absolute));
                 }
 
+                //Path proof icons
+                if (File.Exists("CustomImages/Other/proof_p.png"))
+                {
+                    SorasHeartPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    DriveFormsPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    SimulatedTwilightTownPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    TwilightTownPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    HollowBastionPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    BeastsCastlePath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    OlympusColiseumPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    AgrabahPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    LandofDragonsPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    HundredAcreWoodPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    PrideLandsPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    DisneyCastlePath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    HalloweenTownPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    PortRoyalPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    SpaceParanoidsPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    TWTNWPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    GoAPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    AtlanticaPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                    PuzzSynthPath_Pea.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_p.png", UriKind.Absolute));
+                }
+                if (File.Exists("CustomImages/Other/proof_c.png"))
+                {
+                    SorasHeartPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    DriveFormsPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    SimulatedTwilightTownPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    TwilightTownPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    HollowBastionPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    BeastsCastlePath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    OlympusColiseumPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    AgrabahPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    LandofDragonsPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    HundredAcreWoodPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    PrideLandsPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    DisneyCastlePath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    HalloweenTownPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    PortRoyalPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    SpaceParanoidsPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    TWTNWPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    GoAPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    AtlanticaPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+                    PuzzSynthPath_Con.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_c.png", UriKind.Absolute));
+
+                }
+                if (File.Exists("CustomImages/Other/proof_n.png"))
+                {
+                    SorasHeartPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    DriveFormsPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    SimulatedTwilightTownPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    TwilightTownPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    HollowBastionPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    BeastsCastlePath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    OlympusColiseumPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    AgrabahPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    LandofDragonsPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    HundredAcreWoodPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    PrideLandsPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    DisneyCastlePath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    HalloweenTownPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    PortRoyalPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    SpaceParanoidsPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    TWTNWPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    GoAPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    AtlanticaPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                    PuzzSynthPath_Non.Source = new BitmapImage(new Uri("pack://application:,,,/CustomImages/Other/proof_n.png", UriKind.Absolute));
+                }
+
                 //world cross
                 if (File.Exists("CustomImages/Other/crossworld.png"))
                 {

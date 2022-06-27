@@ -480,8 +480,11 @@ namespace KhTracker
                 item.MouseEnter += item.Report_Hover;
             }
 
-            if (data.WorldsData[data.reportInformation[index].Item1].containsGhost)
-                Updatenumbers_spoil(data.WorldsData[data.reportInformation[index].Item1]);
+            if (MainWindow.SpoilerReportMode)
+            {
+                if (data.WorldsData[data.reportInformation[index].Item1].containsGhost)
+                    Updatenumbers_spoil(data.WorldsData[data.reportInformation[index].Item1]);
+            }
 
             return true;
         }

@@ -1809,6 +1809,68 @@ namespace KhTracker
                     broadcast.TwilightTownLock_2.Source = new BitmapImage(new Uri("Images/Other/visitlock.png", UriKind.Relative));
                     broadcast.TwilightTownLock_1.Source = new BitmapImage(new Uri("Images/Other/visitlocksilver.png", UriKind.Relative));
                 }
+                //reload path hints icons
+                {
+                    SorasHeartPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    DriveFormsPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    SimulatedTwilightTownPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    TwilightTownPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    HollowBastionPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    BeastsCastlePath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    OlympusColiseumPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    AgrabahPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    LandofDragonsPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    HundredAcreWoodPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    PrideLandsPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    DisneyCastlePath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    HalloweenTownPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    PortRoyalPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    SpaceParanoidsPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    TWTNWPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    GoAPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    AtlanticaPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+                    PuzzSynthPath_Pea.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_tranquility.png", UriKind.Relative));
+
+                    SorasHeartPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    DriveFormsPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    SimulatedTwilightTownPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    TwilightTownPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    HollowBastionPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    BeastsCastlePath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    OlympusColiseumPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    AgrabahPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    LandofDragonsPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    HundredAcreWoodPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    PrideLandsPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    DisneyCastlePath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    HalloweenTownPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    PortRoyalPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    SpaceParanoidsPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    TWTNWPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    GoAPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    AtlanticaPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+                    PuzzSynthPath_Con.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_connection.png", UriKind.Relative));
+
+                    SorasHeartPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    DriveFormsPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    SimulatedTwilightTownPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    TwilightTownPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    HollowBastionPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    BeastsCastlePath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    OlympusColiseumPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    AgrabahPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    LandofDragonsPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    HundredAcreWoodPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    PrideLandsPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    DisneyCastlePath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    HalloweenTownPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    PortRoyalPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    SpaceParanoidsPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    TWTNWPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    GoAPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    AtlanticaPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                    PuzzSynthPath_Non.Source = new BitmapImage(new Uri("Images/Checks/Simple/proof_of_nonexistence.png", UriKind.Relative));
+                }
                 //reload others
                 {
                     SorasHeartCross.Source =            new BitmapImage(new Uri("Images/Other/crossworld.png", UriKind.Relative));

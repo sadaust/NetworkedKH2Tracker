@@ -582,6 +582,12 @@
     <Image x:Key="Cus-UnknownDisk"		 Source="pack://application:,,,/CustomImages/Checks/UnknownDisk.png"/>
     <Image x:Key="Cus-Anti"		         Source="pack://application:,,,/CustomImages/Checks/anti.png"/>
 
+    <!--Custom path hints icons-->
+    <Image x:Key="Cus-proof_p"		         Source="pack://application:,,,/CustomImages/Other/proof_p.png"/>
+    <Image x:Key="Cus-proof_c"		         Source="pack://application:,,,/CustomImages/Other/proof_c.png"/>
+    <Image x:Key="Cus-proof_n"		         Source="pack://application:,,,/CustomImages/Other/proof_n.png"/>
+    <Image x:Key="Cus-proof_cross"		     Source="pack://application:,,,/CustomImages/Other/cross.png"/>
+
     <!--Custom Item Icons (Broadcast)-->
     <Image x:Key="Cus-B_AnsemReport"	Source="pack://application:,,,/CustomImages/Broadcast/Other/ansem_report.png" x:Shared="false"/>
     <Image x:Key="Cus-B_TornPage" 		Source="pack://application:,,,/CustomImages/Broadcast/Other/torn_pages.png" x:Shared="false"/>
