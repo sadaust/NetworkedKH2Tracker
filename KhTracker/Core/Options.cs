@@ -1197,7 +1197,13 @@ namespace KhTracker
             broadcast.UpdateNumbers();
 
             DeathCounter = 0;
+            List<BitmapImage> DeathNum = UpdateNumber(0, "Y");
+            Death_01.Source = DeathNum[0];
+            broadcast.Death_01.Source = DeathNum[0];
+            Death_10.Source = null;
+            broadcast.Death_10.Source = null;
             DeathCounterGrid.Visibility = Visibility.Collapsed;
+
             HintTextParent.SetValue(Grid.ColumnProperty, 2);
             HintTextParent.SetValue(Grid.ColumnSpanProperty, 21);
             broadcast.DeathCounter.Width = new GridLength(0, GridUnitType.Star);

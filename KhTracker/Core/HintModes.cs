@@ -87,6 +87,13 @@ namespace KhTracker
                 data.reportInformation.Add(new Tuple<string, int>(world, int.Parse(count)));
                 data.reportLocations.Add(location);
             }
+
+            foreach (string name in data.WorldsData.Keys.ToList())
+            {
+                if(name != "GoA")
+                    broadcast.SetFoundNumber_J(name, null);
+            }
+
             ReportsToggle(true);
             data.hintsLoaded = true;
         }

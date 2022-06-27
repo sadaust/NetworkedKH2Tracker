@@ -673,7 +673,7 @@ namespace KhTracker
             //next level check
             stats.SetNextLevelCheck(stats.Level);
             List<BitmapImage> LevelCheckNum = UpdateNumber(stats.LevelCheck, "G");
-            if (stats.LevelCheck < 9)
+            if (stats.LevelCheck < 10)
             {
                 LevelCheck_01.Source = null;
                 LevelCheck_10.Source = LevelCheckNum[0];

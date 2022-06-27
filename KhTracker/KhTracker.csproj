@@ -754,11 +754,15 @@
     <Content Include="CustomImages\Numbers\Yellow\8.png" />
     <Content Include="CustomImages\Numbers\Yellow\9.png" />
     <Content Include="CustomImages\Numbers\Yellow\QuestionMark.png" />
+    <Content Include="CustomImages\Other\cross.png" />
     <Content Include="CustomImages\Other\crossworld.png" />
     <Content Include="CustomImages\Other\death.png" />
     <Content Include="CustomImages\Other\defence.png" />
     <Content Include="CustomImages\Other\level.png" />
     <Content Include="CustomImages\Other\magic.png" />
+    <Content Include="CustomImages\Other\proof_c.png" />
+    <Content Include="CustomImages\Other\proof_n.png" />
+    <Content Include="CustomImages\Other\proof_p.png" />
     <Content Include="CustomImages\Other\shield.png" />
     <Content Include="CustomImages\Other\staff.png" />
     <Content Include="CustomImages\Other\strength.png" />
