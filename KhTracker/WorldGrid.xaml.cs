@@ -423,6 +423,7 @@ namespace KhTracker
         public bool Handle_SpoilerReport(Item item, MainWindow window, Data data)
         {
             bool isreport = false;
+            bool isempty = false;
             int index = 0;
 
             // item is a report
@@ -441,6 +442,7 @@ namespace KhTracker
                     if (data.reportInformation[index].Item1 == "Empty")
                     {
                         window.SetHintText("This report is too faded to read...");
+                        isempty = true;
                     }
                     else
                     {
@@ -454,6 +456,10 @@ namespace KhTracker
                         {
                             window.SetHintText(Codes.GetHintTextName(data.reportInformation[index].Item1) + " has been revealed!");
                             SpoilerWorldReveal(data.reportInformation[index].Item1, data, "Report" + index);
+
+                            //change hinted world to use green numbers
+                            //(we do this here instead of using SetWorldGhost cause we want world numbers to stay green until they are actually complete)
+                            data.WorldsData[data.reportInformation[index].Item1].containsGhost = true;
                         }
                     }
 
@@ -461,9 +467,6 @@ namespace KhTracker
                     data.ReportAttemptVisual[index].SetResourceReference(ContentControl.ContentProperty, "Fail0");
                     data.reportAttempts[index] = 3;
                     isreport = true;
-                    //change hinted world to use green numbers
-                    //(we do this here instead of using SetWorldGhost cause we want world numbers to stay green until they are actually complete)
-                    data.WorldsData[data.reportInformation[index].Item1].containsGhost = true;
                 }
                 else
                 {
@@ -480,7 +483,7 @@ namespace KhTracker
                 item.MouseEnter += item.Report_Hover;
             }
 
-            if (MainWindow.SpoilerReportMode)
+            if (MainWindow.SpoilerReportMode && !isempty)
             {
                 if (data.WorldsData[data.reportInformation[index].Item1].containsGhost)
                     Updatenumbers_spoil(data.WorldsData[data.reportInformation[index].Item1]);
