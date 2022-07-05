@@ -157,7 +157,7 @@ namespace KhTracker
             {
                 if (data.reportInformation[index].Item1 == "Empty")
                 {
-                    MainW.SetHintText("This report looks too faded to read...");
+                    MainW.SetHintText("This report is too faded to read...");
                 }
                 else
                 {
