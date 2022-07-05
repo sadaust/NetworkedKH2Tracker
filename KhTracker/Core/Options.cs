@@ -1408,6 +1408,7 @@ namespace KhTracker
                             var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                             var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                             var settings = new List<string>();
+                            bool betterSTTon = false;
 
                             ShouldResetHash = false;
 
@@ -1497,8 +1498,7 @@ namespace KhTracker
                                             SynthToggle(true);
                                             break;
                                         case "better_stt":
-                                            SimulatedTwilightTownPlus.Visibility = Visibility.Visible;
-                                            broadcast.SimulatedTwilightTownPlus.Visibility = Visibility.Visible;
+                                            betterSTTon = true;
                                             break;
                                         case "extra_ics":
                                             ExtraChecksToggle(true);
@@ -1560,6 +1560,13 @@ namespace KhTracker
                                     break;
                                 default:
                                     break;
+                            }
+
+                            //better stt icon workaround
+                            if (betterSTTon)
+                            {
+                                SimulatedTwilightTownPlus.Visibility = Visibility.Visible;
+                                broadcast.SimulatedTwilightTownPlus.Visibility = Visibility.Visible;
                             }
                         }
                     }
