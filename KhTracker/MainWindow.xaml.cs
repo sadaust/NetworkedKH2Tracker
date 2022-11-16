@@ -14,6 +14,10 @@ using System.Windows.Documents;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
+//Adding forms assembly for join multiplayer form caused these to become ambiguous
+using Image = System.Windows.Controls.Image;
+using Brushes = System.Windows.Media.Brushes;
+
 namespace KhTracker
 {
     /// <summary>
@@ -507,6 +511,7 @@ namespace KhTracker
             Properties.Settings.Default.Save();
             broadcast.canClose = true;
             broadcast.Close();
+            NetworkShutdown();
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

@@ -613,6 +613,9 @@ namespace KhTracker
                     {
                         foreach (string item in items.Split(' '))
                         {
+                            //TODO: FIX MULTIPLAYER USING GHOSTS
+                            if (item.StartsWith("Ghost_"))
+                                continue;
                             WorldGrid grid = FindName(worldName + "Grid") as WorldGrid;
                             Item importantCheck = FindName(item) as Item;
 
@@ -1237,6 +1240,16 @@ namespace KhTracker
             {
                 ParseSeed(openFileDialog.FileName);
             }
+        }
+
+        private void JoinServer(object sender, RoutedEventArgs e)
+        {
+            Join();
+        }
+
+        private void StartServer(object sender, RoutedEventArgs e)
+        {
+            Host(Properties.Settings.Default.HostPort);
         }
 
         public void ParseSeed(string filename)

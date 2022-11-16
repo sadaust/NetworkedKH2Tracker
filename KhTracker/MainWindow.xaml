@@ -50,6 +50,9 @@
                 <MenuItem Name="TopMostOption" Header="Always on Top" IsCheckable="True" IsChecked="False" Click="TopMostToggle"/>
                 <MenuItem Name="DragAndDropOption" Header="Drag and Drop" IsCheckable="True" IsChecked="True" Click="DragDropToggle"/>
                 <MenuItem Name="LegacyOption" Header="Legacy STT Magic Tracking" IsCheckable="True" IsChecked="False" Click="LegacyToggle"/>
+                <Separator/>
+                <MenuItem Name="MultiplayerJoin" Header="Join Multiplayer" Click="JoinServer"/>
+                <MenuItem Name="MultiplayerHost" Header="Host Multiplayer" Click="StartServer"/>
             </MenuItem>
             <MenuItem Header="Toggles" Focusable="False">
                 <MenuItem Name="PromiseCharmOption" Header="Promise Charm" IsCheckable="True" IsChecked="False" Click="PromiseCharmToggle"/>
@@ -82,6 +85,7 @@
                 <MenuItem Name="SoraLevel50Option" 		Header="Level 50 Checks" IsCheckable="True" IsChecked="True" Click="SoraLevel50Toggle"/>
                 <MenuItem Name="SoraLevel99Option" 		Header="Level 99 Checks" IsCheckable="True" IsChecked="False" Click="SoraLevel99Toggle"/>
                 <Separator/>
+                <MenuItem Name="DriveTrackOption"       Header="Drive Unlocks" IsCheckable="True" IsChecked="True" Click="DriveTrackToggle"/>
                 <MenuItem Name="SimulatedOption"        Header="Simulated Twilight Town" IsCheckable="True" IsChecked="True" Click="SimulatedToggle"/>
                 <MenuItem Name="HundredAcreWoodOption"  Header="100 Acre Wood" IsCheckable="True" IsChecked="True" Click="HundredAcreWoodToggle"/>
                 <MenuItem Name="AtlanticaOption"        Header="Atlantica" IsCheckable="True" IsChecked="False" Click="AtlanticaToggle"/>
@@ -122,7 +126,8 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Name="ModeDisplay" Header=" " Focusable="False" IsHitTestVisible="False"/>
-            <MenuItem Header="-DA 1.6.8d-" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right"/>
+            <MenuItem Name="NetworkStatus" Header=" " IsHitTestVisible="False" Focusable="False" FlowDirection="RightToLeft"/>
+            <MenuItem Header="-DA 1.6.8d- MP" IsHitTestVisible="False" Focusable="False" HorizontalAlignment="Right" FlowDirection="RightToLeft"/>
         </Menu>
 
         <Grid>

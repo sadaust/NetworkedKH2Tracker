@@ -212,6 +212,11 @@ namespace KhTracker
                     if (Handle_Report(item, MainW, data))
                         Add_Item(item, MainW);
                 }
+
+                if(Network.MP.UpdateItem(item.Name, Name, true, true))
+                {
+                    Remove_Ghost(this.Name.Remove(Name.Length - 4, 4), item);
+                }
             }
             else if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -1009,7 +1014,7 @@ namespace KhTracker
 
         public void Add_Ghost(Item item, MainWindow window)
         {
-            if (MainW.GhostItemOption.IsChecked || MainWindow.data.mode == Mode.SpoilerHints)
+            if (MainW.GhostItemOption.IsChecked || MainWindow.data.mode == Mode.SpoilerHints || Network.MP.IsRunning())
             {
                 Grid ItemRow = VisualTreeHelper.GetParent(item) as Grid;
                 if (ItemRow != null && ItemRow.Parent == MainW.ItemPool)

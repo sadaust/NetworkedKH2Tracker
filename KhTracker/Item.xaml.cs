@@ -132,6 +132,12 @@ namespace KhTracker
                         data.WorldsData[data.selected.Name].worldGrid.Add_Item(this, window);
                     }
                 }
+                
+                if(Network.MP.UpdateItem(this.Name, data.WorldsData[data.selected.Name].worldGrid.Name, true, false))
+                {
+                    data.WorldsData[data.selected.Name].worldGrid.Remove_Ghost(data.selected.Name.Remove(Name.Length - 4, 4), this);
+                }
+                
             }
         }
 

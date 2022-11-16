@@ -803,6 +803,22 @@ namespace KhTracker
                 broadcast.HeartCol.Width = new GridLength(0, GridUnitType.Star);
         }
 
+        private void DriveTrackToggle(object sender, RoutedEventArgs e)
+        {
+            DriveTrackToggle(DriveTrackOption.IsChecked);
+        }
+
+        private void DriveTrackToggle(bool toggle)
+        {
+            Properties.Settings.Default.DriveTrack = toggle;
+            DriveTrackOption.IsChecked = toggle;
+            HandleWorldToggle(toggle, DriveForms, DriveFormsGrid);
+            if (toggle)
+                broadcast.STTColumn.Width = new GridLength(1.0, GridUnitType.Star);
+            else
+                broadcast.STTColumn.Width = new GridLength(0, GridUnitType.Star);
+        }
+
         private void SimulatedToggle(object sender, RoutedEventArgs e)
         {
             SimulatedToggle(SimulatedOption.IsChecked);

@@ -718,6 +718,11 @@ namespace KhTracker
                         ReportType = world.Handle_Report(item as Item, this, data);
                     }
 
+                    if (Network.MP.UpdateItem(itemName, world.Name, true, false))
+                    {
+                        world.Remove_Ghost(world.Name.Remove(Name.Length - 4, 4), item as Item);
+                    }
+
                     if (ReportType)
                     {
                         world.Add_Item(item as Item, this);
