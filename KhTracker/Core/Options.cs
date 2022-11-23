@@ -305,6 +305,7 @@ namespace KhTracker
                     data.reportAttempts[i] = int.Parse(attemptsArray[i]);
                 }
                 data.openKHHintText = reader.ReadLine();
+                NetworkHintUpdate(data.openKHHintText);
                 var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                 var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                 JsmarteeHints(hintObject);
@@ -328,6 +329,7 @@ namespace KhTracker
             else if (mode == "OpenKHAltHints")
             {
                 data.openKHHintText = reader.ReadLine();
+                NetworkHintUpdate(data.openKHHintText);
                 var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                 var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                 ShanHints(hintObject);
@@ -364,6 +366,7 @@ namespace KhTracker
                     data.reportAttempts[i] = int.Parse(attemptsArray[i]);
                 }
                 data.openKHHintText = reader.ReadLine();
+                NetworkHintUpdate(data.openKHHintText);
                 var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                 var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                 PointsHints(hintObject);
@@ -474,6 +477,7 @@ namespace KhTracker
                     data.reportAttempts[i] = int.Parse(attemptsArray[i]);
                 }
                 data.openKHHintText = reader.ReadLine();
+                NetworkHintUpdate(data.openKHHintText);
                 var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                 var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                 PathHints(hintObject);
@@ -504,6 +508,7 @@ namespace KhTracker
                     data.reportAttempts[i] = int.Parse(attemptsArray[i]);
                 }
                 data.openKHHintText = reader.ReadLine();
+                NetworkHintUpdate(data.openKHHintText);
                 var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                 var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                 SpoilerHints(hintObject);
@@ -893,6 +898,7 @@ namespace KhTracker
                 aTimer.Stop();
 
             SetWorking(false);
+            NetworkHintUpdate("");
 
             collectedChecks.Clear();
             newChecks.Clear();
@@ -1249,7 +1255,7 @@ namespace KhTracker
 
         private void StartServer(object sender, RoutedEventArgs e)
         {
-            Host(Properties.Settings.Default.HostPort);
+            Host();
         }
 
         public void ParseSeed(string filename)
@@ -1418,6 +1424,7 @@ namespace KhTracker
                         using (StreamReader reader = new StreamReader(entry.Open()))
                         {
                             data.openKHHintText = reader.ReadToEnd();
+                            NetworkHintUpdate(data.openKHHintText);
                             var hintText = Encoding.UTF8.GetString(Convert.FromBase64String(data.openKHHintText));
                             var hintObject = JsonSerializer.Deserialize<Dictionary<string, object>>(hintText);
                             var settings = new List<string>();

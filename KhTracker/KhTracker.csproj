@@ -31,6 +31,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PathMap>$(MSBuildProjectDirectory)\$(IntermediateOutputPath)=.</PathMap>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -109,19 +110,22 @@
     <Compile Include="AutoTracking\MemoryReader.cs" />
     <Compile Include="Core\Images.cs" />
     <Compile Include="Core\Log.cs" />
-    <Compile Include="Core\Network.cs" />
+    <Compile Include="Multiplayer\Client.cs" />
+    <Compile Include="Multiplayer\Network.cs" />
     <Compile Include="Core\Options.cs" />
     <Compile Include="Core\Data.cs" />
-    <Compile Include="JoinMultiplayerForm.cs">
+    <Compile Include="Multiplayer\JoinMultiplayerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="JoinMultiplayerForm.Designer.cs">
+    <Compile Include="Multiplayer\JoinMultiplayerForm.Designer.cs">
       <DependentUpon>JoinMultiplayerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Item.xaml.cs">
       <DependentUpon>Item.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Toggles.cs" />
+    <Compile Include="Multiplayer\Server.cs" />
+    <Compile Include="Multiplayer\SharedMP.cs" />
     <Compile Include="WorldGrid.xaml.cs">
       <DependentUpon>WorldGrid.xaml</DependentUpon>
     </Compile>
@@ -169,7 +173,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="JoinMultiplayerForm.resx">
+    <EmbeddedResource Include="Multiplayer\JoinMultiplayerForm.resx">
       <DependentUpon>JoinMultiplayerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

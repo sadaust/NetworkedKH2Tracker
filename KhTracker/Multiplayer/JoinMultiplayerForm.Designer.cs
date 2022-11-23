@@ -132,7 +132,7 @@ namespace KhTracker
             0,
             0});
             this.PortEntry.Minimum = new decimal(new int[] {
-            1,
+            1024,
             0,
             0,
             0});

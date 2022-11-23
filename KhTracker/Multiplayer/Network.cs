@@ -15,78 +15,16 @@ using System.IO;
 
 namespace KhTracker
 {
-    //class Network
-
     public partial class MainWindow : Window
     {
         private static DispatcherTimer networkTimer;
-        private static SolidColorBrush errorColor = new SolidColorBrush(Color.FromRgb(0xff,0x00,0x00));
-        private static SolidColorBrush runningColor = new SolidColorBrush(Color.FromRgb(0x00, 0x80, 0x00));
+        private static readonly SolidColorBrush errorColor = new SolidColorBrush(Color.FromRgb(0xff, 0x00, 0x00));
+        private static readonly SolidColorBrush runningColor = new SolidColorBrush(Color.FromRgb(0x00, 0x80, 0x00));
 
         private void SetStatusBar(string msg, bool isError)
         {
             NetworkStatus.Header = msg;
             NetworkStatus.Foreground = isError ? errorColor : runningColor;
-        }
-        private void networkUpdateItem(string itemName, string worldName, bool add, bool manual)
-        {
-            bool hasItem = false;
-            foreach (Item child in MainWindow.data.WorldsData[worldName].worldGrid.Children)
-            {
-                if(child.Name.Equals(itemName))
-                {
-                    hasItem = true;
-                    break;
-                }
-            }
-            if(!hasItem)
-                data.WorldsData[worldName].worldGrid.Add_Ghost(Data.GhostItems["Ghost_" + itemName], null);
-        }
-
-        private void ClientTick(object sender, EventArgs e)
-        {
-            while (Network.MP.HasMessages())
-            {
-                byte[] msg = Network.MP.GetMessage().Message;
-
-                string[] smsg = Encoding.UTF8.GetString(msg, 0, msg.Length).Split(' ');
-
-                networkUpdateItem(smsg[0], smsg[1], smsg[2].Equals("True"), smsg[3].Equals("True"));
-            }
-            //client disconnected/shutdown
-            if(!Network.MP.IsRunning() || !Network.MP.client.IsConnected())
-            {
-                if (Network.MP.IsRunning())
-                    Network.MP.Stop();
-                MultiplayerHost.IsEnabled = true;
-                MultiplayerJoin.Header = "Join Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
-
-                networkTimer.Stop();
-            }
-        }
-
-        private void HostTick(object sender, EventArgs e)
-        {
-            while (Network.MP.HasMessages())
-            {
-                MessageEventArgs msg = Network.MP.GetMessage();
-
-                string[] smsg = Encoding.UTF8.GetString(msg.Message, 0, msg.Message.Length).Split(' ');
-
-                Network.MP.Send(msg.Source, msg.Message, msg.Message.Length);
-
-                networkUpdateItem(smsg[0], smsg[1], smsg[2].Equals("True"), smsg[3].Equals("True"));
-            }
-            //Server shutdown
-            if (!Network.MP.IsRunning())
-            {
-                MultiplayerJoin.IsEnabled = true;
-                MultiplayerHost.Header = "Host Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
-
-                networkTimer.Stop();
-            }
         }
 
         private void NetworkTimerStart(EventHandler OnTick)
@@ -114,56 +52,16 @@ namespace KhTracker
             }
         }
 
-        public void Join(string ip, int port)
-        {
-            if(Network.MP.IsRunning() == false)
-            {
-
-                if (Network.MP.Join(ip, port))
-                {
-                    MultiplayerHost.IsEnabled = false;
-                    MultiplayerJoin.Header = "Disconnect from Multiplayer";
-
-                    SetStatusBar("NetworkStatus: Connected", false);
-
-                    NetworkTimerStart(ClientTick);
-                    GhostItemToggle(true);
-                }
-
-            }
-            else
-            {
-                Network.MP.Stop();
-                MultiplayerHost.IsEnabled = true;
-                MultiplayerJoin.Header = "Join Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
-
-                networkTimer.Stop();
-            }
-        }
-
-        public void Host(int port)
+        public void Host()
         {
             if (Network.MP.IsRunning() == false)
             {
-                if (Network.MP.Host(port))
-                {
-                    MultiplayerJoin.IsEnabled = false;
-                    MultiplayerHost.Header = "Stop Server";
-                    SetStatusBar("NetworkStatus: Connected", false);
-
-                    NetworkTimerStart(HostTick);
-                    GhostItemToggle(true);
-                }
+                Host(Properties.Settings.Default.HostPort);
             }
             else
             {
+                Host(0);
                 Network.MP.Stop();
-                MultiplayerJoin.IsEnabled = true;
-                MultiplayerHost.Header = "Host Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
-
-                networkTimer.Stop();
             }
         }
 
@@ -204,7 +102,7 @@ namespace KhTracker
 
         public static NetworkInterface MP
         {
-            get 
+            get
             {
                 lock (padlock)
                 {
@@ -217,7 +115,7 @@ namespace KhTracker
             }
         }
 
-        const int bufferSize = 2018;
+        const int bufferSize = 1048576;
 
         public class NetworkInterface
         {
@@ -226,7 +124,6 @@ namespace KhTracker
             private List<MessageEventArgs> newMessages;
 
             bool isClient;
-            bool isRunning;
 
             public NetworkInterface()
             {
@@ -234,7 +131,7 @@ namespace KhTracker
                 server = new Server();
                 newMessages = new List<MessageEventArgs>();
 
-                isClient = isRunning = false;
+                isClient = false;
             }
 
             public bool HasMessages()
@@ -244,7 +141,7 @@ namespace KhTracker
 
             public void QueueMessage(MessageEventArgs msg)
             {
-                lock(this)
+                lock (this)
                 {
                     newMessages.Add(msg);
                 }
@@ -263,14 +160,20 @@ namespace KhTracker
 
             public bool UpdateItem(string itemName, string worldName, bool add, bool manual)
             {
-                if (!isRunning)
+                if (!IsRunning())
                     return false;
 
+                if (worldName.EndsWith("Grid"))
+                    worldName = worldName.Remove(worldName.Length - 4, 4);
                 //build update message
-                byte[] msg = Encoding.Default.GetBytes(itemName+' '+ worldName.Remove(worldName.Length - 4, 4) + ' '+add+' '+manual);
+                ItemFoundMSG itemMsg = new ItemFoundMSG(itemName, worldName, add, manual);
+                byte[] byteItem = itemMsg.ToByte();
+                byte[] msg = new byte[sizeof(NetworkMessages) + byteItem.Length];
+                msg[0] = (byte)NetworkMessages.ItemFound;
+                byteItem.CopyTo(msg, 1);
 
                 //send update message
-                if(isClient)
+                if (isClient)
                 {
                     client.send(msg, msg.Length);
                 }
@@ -282,16 +185,10 @@ namespace KhTracker
                 return true;
             }
 
-            public bool Join(string serverAddress, int port)
+            public void Join(string serverAddress, int port)
             {
-                bool result = client.connect(serverAddress, port);
-
-                if (result == true)
-                {
-                    isClient = isRunning = true;
-                }
-
-                return result;
+                isClient = true;
+                client.Join(serverAddress, port);
             }
 
             public bool Host(int port)
@@ -301,7 +198,6 @@ namespace KhTracker
                 if (result == true)
                 {
                     isClient = false;
-                    isRunning = true;
                 }
 
                 return result;
@@ -321,28 +217,38 @@ namespace KhTracker
 
             public void Send(int clientId, byte[] msg, int msgLength)
             {
-                if(!isClient)
+                if (!isClient)
                 {
                     server.Send(clientId, msg, msgLength);
+                }
+                else
+                {
+                    client.send(msg, msgLength);
+                }
+            }
+
+            public void Broadcast(int source, byte[] msg, int msgLength)
+            {
+                if(!isClient)
+                {
+                    server.BroadcastMessage(source, msg, msgLength);
                 }
             }
 
             public void Stop()
             {
-                if (isRunning == true)
+                if (IsRunning() == true)
                 {
                     if (isClient)
                         client.stop();
                     else
                         server.stop();
-
-                    isRunning = false;
                 }
             }
 
             public bool IsRunning()
             {
-                return isRunning;
+                return client.isRunning || server.isRunning;
             }
 
             public bool IsClient()
@@ -355,8 +261,8 @@ namespace KhTracker
         {
             private TcpListener tcpserver;
             private List<cWorker> clients;
-            private Thread sThread;
             private int nextId;
+            public bool isRunning;
 
 
             public bool start(int port)
@@ -373,7 +279,6 @@ namespace KhTracker
 
                 if (tcpserver != null)
                 {
-                    sThread.Abort();
                     tcpserver.Stop();
                 }
 
@@ -382,11 +287,12 @@ namespace KhTracker
                 {
                     tcpserver.Start();
                     nextId = 1;
-                    sThread = new Thread(accept_connect);
-                    sThread.Start();
+                    isRunning = true;
+                    new Thread(accept_connect).Start();
                     return true;
                 }
 
+                isRunning = false;
                 return false;
             }
             public void stop()
@@ -394,29 +300,51 @@ namespace KhTracker
                 if (tcpserver != null)
                 {
                     removeAllClients();
-
-                    sThread.Abort();
                     tcpserver.Stop();
                 }
+                isRunning = false;
             }
 
             private void accept_connect()
             {
-                while (true)
+                try
                 {
-                    TcpClient socket = tcpserver.AcceptTcpClient();
-                    cWorker worker = new cWorker(socket, nextId);
-                    nextId++;
-                    addClient(worker);
-                    worker.Start();
+                    while (true)
+                    {
+
+                        TcpClient socket = tcpserver.AcceptTcpClient();
+                        cWorker worker = new cWorker(socket, nextId);
+                        nextId++;
+                        addClient(worker);
+                        worker.Start();
+
+                    }
+                }
+                catch (IOException) { }
+                catch (ObjectDisposedException) { }
+                catch (SocketException e)
+                {
+                    switch (e.NativeErrorCode)
+                    {
+                        case 10004:
+                            // socket was closed, no need to display an error just stop the thread
+                            break;
+                        default:
+                            MessageBox.Show(e.Message);
+                            break;
+                    }
                 }
             }
 
             public void Send(int id, byte[] msg, int msgLegnth)
             {
-                if(id >= 0 && clients.Count() > id)
+                foreach(cWorker client in clients)
                 {
-                    clients[id].Send(msg, msgLegnth);
+                    if (client.id == id)
+                    {
+                        client.Send(msg, msgLegnth);
+                        return;
+                    }
                 }
             }
 
@@ -428,14 +356,17 @@ namespace KhTracker
             public void BroadcastMessage(int from, byte[] message, int msgLength)
             {
                 cWorker source = null;
-                lock(this)
+                lock (this)
                 {
-                    for(int i = 0; i < clients.Count; i++)
+                    if (from != 0)
                     {
-                        if (clients[i].id == from)
+                        for (int i = 0; i < clients.Count; i++)
                         {
-                            source = clients[i];
-                            break;
+                            if (clients[i].id == from)
+                            {
+                                source = clients[i];
+                                break;
+                            }
                         }
                     }
                 }
@@ -486,6 +417,26 @@ namespace KhTracker
                 }
             }
 
+            public void RemoveClient(int id)
+            {
+                cWorker source = null;
+                lock (this)
+                {
+                    if (id != 0)
+                    {
+                        for (int i = 0; i < clients.Count; i++)
+                        {
+                            if (clients[i].id == id)
+                            {
+                                source = clients[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                removeClient(source);
+            }
             private void removeClient(cWorker worker)
             {
                 lock (this)
@@ -511,82 +462,121 @@ namespace KhTracker
                     clients.Clear();
                 }
             }
-        }
 
-        public enum ClientState
-        {
-            init,
-            connecting,
-            join,
-            running,
-            disconnected,
-            unknown,
-            last
+            public void UpdateClientStatus(int id, ClientState newState)
+            {
+                cWorker source = null;
+                lock (this)
+                {
+                    if (id != 0)
+                    {
+                        for (int i = 0; i < clients.Count; i++)
+                        {
+                            if (clients[i].id == id)
+                            {
+                                source = clients[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                UpdateClientStatus(source, newState);
+            }
+
+            private void UpdateClientStatus(cWorker client, ClientState newState)
+            {
+                if (client == null)
+                    return;
+
+                lock (this)
+                {
+                    client.state = newState;
+                }
+            }
         }
 
         public class Client
         {
             private TcpClient sock;
             private Stream ns;
-            private ClientState state;
             public event EventHandler OnDisconnect;
             public event MessageEventHandler OnMessageRecv;
 
+            public bool isRunning;
+
+            public void Join(string ip, int port)
+            {
+                isRunning = true;
+                new Thread(() => Run(ip, port)).Start();
+            }
             private void onMessageReceived(object sender, MessageEventArgs e)
             {
                 MP.QueueMessage(e);
             }
-            public bool connect(string serverAddress, int port)
+            private void connect(string serverAddress, int port)
             {
                 if (sock != null)
                     stop();
-                try
-                {
-                    sock = new TcpClient(serverAddress, port);
-                }
-                catch (SocketException e)
-                {
-                    switch (e.NativeErrorCode)
-                    {
-                        case 10061:
-                            MessageBox.Show("Failed to connect to server");
-                            break;
-                        default:
-                            MessageBox.Show(e.Message);
-                            break;
-                    }
-                }
+                isRunning = true;
+                sock = new TcpClient(serverAddress, port);
 
                 if (sock != null)
                 {
                     ns = sock.GetStream();
                     OnMessageRecv += onMessageReceived;
-                    new Thread(Run).Start();
-
-                    return true;
                 }
-
-                return false;
             }
 
             public bool IsConnected()
             {
-                return sock.Connected;
+                return sock != null && sock.Connected;
             }
 
             public void send(byte[] msg)
             {
-                ns.Write(msg, 0, msg.Length);
+                if (ns != null)
+                    ns.Write(msg, 0, msg.Length);
             }
 
             public void send(byte[] msg, int length)
             {
-                ns.Write(msg, 0, length);
+                if (ns != null)
+                    ns.Write(msg, 0, length);
             }
 
-            private void Run()
+            private void Run(string ip, int port)
             {
-                byte[] buffer = new byte[2048];
+                int retryCount = 0;
+                while (true)
+                {
+                    try
+                    {
+                        connect(ip, port);
+                        break;
+                    }
+                    catch (SocketException e)
+                    {
+                        if (retryCount < 5)
+                        {
+                            retryCount++;
+                            continue;
+                        }
+                        switch (e.NativeErrorCode)
+                        {
+                            case 10061:
+                                MessageBox.Show("Failed to connect to server");
+                                break;
+                            default:
+                                MessageBox.Show(e.Message);
+                                break;
+                        }
+                        stop();
+                        return;
+                    }
+                }
+
+                byte[] buffer = new byte[bufferSize];
                 try
                 {
                     while (true)
@@ -594,7 +584,9 @@ namespace KhTracker
                         int receivedBytes = ns.Read(buffer, 0, buffer.Length);
                         if (receivedBytes < 1)
                             break;
-                        OnMessageRecv?.Invoke(this, new MessageEventArgs(buffer, 0));
+                        byte[] msg = new byte[receivedBytes];
+                        Buffer.BlockCopy(buffer, 0, msg, 0, receivedBytes);
+                        OnMessageRecv?.Invoke(this, new MessageEventArgs(msg, 0));
                     }
                 }
                 catch (IOException) { }
@@ -606,6 +598,7 @@ namespace KhTracker
             {
                 if (sock != null)
                     sock.Close();
+                isRunning = false;
                 OnDisconnect -= OnDisconnect;
                 OnMessageRecv -= OnMessageRecv;
             }
@@ -620,7 +613,7 @@ namespace KhTracker
 
             private readonly TcpClient sock;
             private readonly Stream ns;
-            private ClientState state;
+            public ClientState state;
             public int id;
 
             public cWorker(TcpClient socket, int id)
@@ -642,7 +635,7 @@ namespace KhTracker
 
             public void Start()
             {
-                state = ClientState.join;
+                state = ClientState.Join;
                 new Thread(Run).Start();
             }
 
@@ -653,11 +646,12 @@ namespace KhTracker
                 {
                     while (true)
                     {
-                        int recivedBytes = ns.Read(buffer, 0, bufferSize);
-                        if (recivedBytes < 1)
+                        int receivedBytes = ns.Read(buffer, 0, buffer.Length);
+                        if (receivedBytes < 1)
                             break;
-
-                        MessageReceived?.Invoke(this, new MessageEventArgs(buffer, id));
+                        byte[] msg = new byte[receivedBytes];
+                        Buffer.BlockCopy(buffer, 0, msg, 0, receivedBytes);
+                        MessageReceived?.Invoke(this, new MessageEventArgs(msg, id));
                     }
                 }
                 catch (ObjectDisposedException) { }
