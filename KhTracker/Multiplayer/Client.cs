@@ -111,6 +111,18 @@ namespace KhTracker
             }
         }
 
+        public int OnClientSyncMSG(int offset, byte[] msg, int source)
+        {
+            SyncMsg sync = new SyncMsg();
+            offset = sync.FromByte(msg, offset);
+
+            foreach ((ItemIDs itemID, WorldIDs worldID) item in sync.FoundItems)
+            {
+                networkUpdateItem(item.itemID.ToString(), item.worldID.ToString(), true, false);
+            }
+            return offset;
+        }
+
         public int OnClientHintDataMSG(int offset, byte[] msg, int source)
         {
             HintDataMSG hMsg = new HintDataMSG();
@@ -288,6 +300,7 @@ namespace KhTracker
             {
                 mpClient.MessageHandlers.Add(NetworkMessages.ItemFound, OnItemFound);
                 mpClient.MessageHandlers.Add(NetworkMessages.HintData, OnClientHintDataMSG);
+                mpClient.MessageHandlers.Add(NetworkMessages.SyncData, OnClientSyncMSG);
             }
             if (Network.MP.IsRunning() == false)
             {

@@ -7,7 +7,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using System.Windows.Media;
-
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
@@ -121,6 +120,7 @@ namespace KhTracker
         {
             public Client client;
             public Server server;
+            private MPServer mpServer;
             private List<MessageEventArgs> newMessages;
 
             bool isClient;
@@ -132,6 +132,11 @@ namespace KhTracker
                 newMessages = new List<MessageEventArgs>();
 
                 isClient = false;
+            }
+
+            public void setServer(MPServer ser)
+            {
+                mpServer = ser;
             }
 
             public bool HasMessages()
@@ -179,6 +184,8 @@ namespace KhTracker
                 }
                 else
                 {
+                    if (mpServer != null)
+                        mpServer.AddItem(itemName, worldName);
                     server.BroadcastMessage(null, msg, msg.Length);
                 }
 
@@ -463,6 +470,38 @@ namespace KhTracker
                 }
             }
 
+            private bool GetClientStatus(cWorker source, out ClientState curState, out TimeSpan elapsed)
+            {
+                curState = ClientState.Unknown;
+                elapsed = TimeSpan.Zero;
+                if (source == null)
+                    return false;
+
+                curState = source.state;
+                elapsed = source.TimeInCurrentState();
+                return true;
+            }
+            public bool GetClientStatus(int id, out ClientState curState, out TimeSpan elapsed)
+            {
+                cWorker source = null;
+                
+                lock (this)
+                {
+                    if (id != 0)
+                    {
+                        for (int i = 0; i < clients.Count; i++)
+                        {
+                            if (clients[i].id == id)
+                            {
+                                source = clients[i];
+                                break;
+                            }
+                        }
+                    }
+                }
+                return GetClientStatus(source, out curState, out elapsed);
+            }
+
             public void UpdateClientStatus(int id, ClientState newState)
             {
                 cWorker source = null;
@@ -491,7 +530,7 @@ namespace KhTracker
 
                 lock (this)
                 {
-                    client.state = newState;
+                    client.ChangeState(newState);
                 }
             }
         }
@@ -613,6 +652,8 @@ namespace KhTracker
 
             private readonly TcpClient sock;
             private readonly Stream ns;
+            private int extra;
+            private DateTime StateStart;
             public ClientState state;
             public int id;
 
@@ -621,6 +662,17 @@ namespace KhTracker
                 this.sock = socket;
                 this.ns = socket.GetStream();
                 this.id = id;
+            }
+
+            public void ChangeState(ClientState newState)
+            {
+                state = newState;
+                StateStart = DateTime.Now;
+            }
+
+            public TimeSpan TimeInCurrentState()
+            {
+                return DateTime.Now - StateStart;
             }
 
             public void Send(byte[] buffer)
@@ -636,6 +688,7 @@ namespace KhTracker
             public void Start()
             {
                 state = ClientState.Join;
+                
                 new Thread(Run).Start();
             }
 

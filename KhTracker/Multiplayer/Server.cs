@@ -58,6 +58,9 @@ namespace KhTracker
             {
                 mpServer.MessageHandlers.Add(NetworkMessages.ItemFound, OnItemFound);
                 mpServer.MessageHandlers.Add(NetworkMessages.Join, mpServer.OnJoinReq);
+                mpServer.MessageHandlers.Add(NetworkMessages.SyncRequest, mpServer.OnSyncRequest);
+
+                Network.MP.setServer(mpServer);
             }
             if (Network.MP.IsRunning() == false)
             {
@@ -90,14 +93,26 @@ namespace KhTracker
         public JoinRequest JoinReqData;
         public bool bAllowDownload;
         public bool bHintMatch;
+        private Dictionary<ItemIDs, WorldIDs> FoundItems;
 
         public MPServer()
         {
             Mode = new GameMode();
             MessageHandlers = new Dictionary<NetworkMessages, NetworkMessageHandler>();
             JoinReqData = new JoinRequest();
+            FoundItems = new Dictionary<ItemIDs, WorldIDs>();
             bHintMatch = true;
             bAllowDownload = true;
+        }
+
+        public void AddItem(string itemName, string worldName)
+        {
+            ItemIDs name = ItemIDs.Error;
+            WorldIDs world = WorldIDs.Error;
+            Enum.TryParse<ItemIDs>(itemName, out name);
+            Enum.TryParse<WorldIDs>(worldName, out world);
+
+            FoundItems.Add(name, world);
         }
 
         public int OnJoinReq(int offset, byte[] msg, int source)
@@ -109,17 +124,41 @@ namespace KhTracker
             {
                 if (!bHintMatch || req.hintData.SequenceEqual(JoinReqData.hintData))
                 {
-                    //TODO add sync MSG
-                    resp = new byte[] { (byte)NetworkMessages.Join };
+                    int msgOffset = 0;
+                    byte[] syncMsg = CreateSyncData();
+                    resp = new byte[sizeof(NetworkMessages) + sizeof(NetworkMessages) + syncMsg.Length];
+
+                    resp[msgOffset] = (byte)NetworkMessages.Join;
+                    msgOffset += sizeof(NetworkMessages);
+
+                    resp[msgOffset] = (byte)NetworkMessages.SyncData;
+                    msgOffset += sizeof(NetworkMessages);
+
+                    syncMsg.CopyTo(resp, msgOffset);
+
                     Network.MP.server.UpdateClientStatus(source, ClientState.Running);
                 }
                 else if(bAllowDownload)
                 {
-                    //TODO add sync MSG
+                    int msgOffset = 0;
                     byte[] hintMsg = new HintDataMSG(JoinReqData.hintData).ToByte();
-                    resp = new byte[1 + hintMsg.Length];
-                    resp[0] = (byte)NetworkMessages.HintData;
-                    hintMsg.CopyTo(resp, 1);
+                    byte[] syncMsg = CreateSyncData();
+                    resp = new byte[sizeof(NetworkMessages) + sizeof(NetworkMessages) + hintMsg.Length + sizeof(NetworkMessages) + syncMsg.Length];
+
+                    resp[msgOffset] = (byte)NetworkMessages.Join;
+                    msgOffset += sizeof(NetworkMessages);
+
+                    resp[msgOffset] = (byte)NetworkMessages.HintData;
+                    msgOffset += sizeof(NetworkMessages);
+
+                    hintMsg.CopyTo(resp, msgOffset);
+                    msgOffset += hintMsg.Length;
+
+                    resp[msgOffset] = (byte)NetworkMessages.SyncData;
+                    msgOffset += sizeof(NetworkMessages);
+
+                    syncMsg.CopyTo(resp, msgOffset);
+
                     Network.MP.server.UpdateClientStatus(source, ClientState.Running);
                 }
                 else
@@ -136,6 +175,29 @@ namespace KhTracker
                 Network.MP.server.RemoveClient(source);
             }
             Network.MP.server.Send(source, resp, resp.Length);
+            return offset;
+        }
+
+        public byte[] CreateSyncData()
+        {
+            SyncMsg syncData = new SyncMsg();
+
+            foreach (KeyValuePair<ItemIDs, WorldIDs> item in FoundItems)
+            {
+                syncData.FoundItems.Add((item.Key, item.Value));
+            }
+
+            return syncData.ToByte();
+        }
+
+        public int OnSyncRequest(int offset, byte[] msg, int source)
+        {
+            byte[] sync = CreateSyncData();
+            byte[] resp = new byte[sizeof(NetworkMessages) + sync.Length];
+            resp[0] = (byte)NetworkMessages.SyncData;
+            sync.CopyTo(resp, 1);
+            Network.MP.server.Send(source, resp, resp.Length);
+
             return offset;
         }
     }

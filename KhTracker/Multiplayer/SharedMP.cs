@@ -5,10 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Collections;
-using System.Windows.Forms;
-
-using ApplicationVer = System.Windows.Forms.Application;
-using Application = System.Windows.Application;
 
 
 namespace KhTracker
@@ -53,6 +49,77 @@ namespace KhTracker
         PuzzSynth
     }
 
+    public enum ItemIDs : byte
+    {
+        Error,
+        Report1,
+        Report2,
+        Report3,
+        Report4,
+        Report5,
+        Report6,
+        Report7,
+        Report8,
+        Report9,
+        Report10,
+        Report11,
+        Report12,
+        Report13,
+        Fire1,
+        Fire2,
+        Fire3,
+        Blizzard1,
+        Blizzard2,
+        Blizzard3,
+        Thunder1,
+        Thunder2,
+        Thunder3,
+        Cure1,
+        Cure2,
+        Cure3,
+        HadesCup,
+        OlympusStone,
+        Reflect1,
+        Reflect2,
+        Reflect3,
+        Magnet1,
+        Magnet2,
+        Magnet3,
+        Valor,
+        Wisdom,
+        Limit,
+        Master,
+        Final,
+        Anti,
+        OnceMore,
+        SecondChance,
+        UnknownDisk,
+        TornPage1,
+        TornPage2,
+        TornPage3,
+        TornPage4,
+        TornPage5,
+        Baseball,
+        Lamp,
+        Ukulele,
+        Feather,
+        Connection,
+        Nonexistence,
+        Peace,
+        PromiseCharm,
+        BeastWep,
+        JackWep,
+        SimbaWep,
+        AuronWep,
+        MulanWep,
+        SparrowWep,
+        AladdinWep,
+        TronWep,
+        MembershipCard,
+        Picture,
+        IceCream
+    }
+
     public class GameMode
     {
         public bool bSharedHints;
@@ -90,18 +157,19 @@ namespace KhTracker
         public string ver;
         public string hintData;
 
+        const string NetworkVersion = "1.0.0.2";
 
         public JoinRequest()
         {
             magicNumber = new byte[] { 0x53, 0x41, 0x44 };
-            ver = ApplicationVer.ProductVersion;
+            ver = NetworkVersion;
             hintData = "";
         }
 
         public JoinRequest(string hint)
         {
             magicNumber = new byte[] { 0x53, 0x41, 0x44 };
-            ver = ApplicationVer.ProductVersion;
+            ver = NetworkVersion;
             hintData = hint;
         }
 
@@ -181,17 +249,15 @@ namespace KhTracker
         {
             byte[] ret;
             BitArray flags = new BitArray(new bool[] { bAdd, bManual });
-            byte[] name = Encoding.UTF8.GetBytes(sItemName);
+            ItemIDs name = ItemIDs.Error;
             WorldIDs world = WorldIDs.Error;
+            Enum.TryParse<ItemIDs>(sItemName, out name);
             Enum.TryParse<WorldIDs>(sWorldName, out world);
-            ret = new byte[sizeof(int) + name.Length + sizeof(WorldIDs) + ((flags.Length - 1) / 8 + 1)];
+            ret = new byte[sizeof(ItemIDs) + sizeof(WorldIDs) + ((flags.Length - 1) / 8 + 1)];
             int offset = 0;
 
-            BitConverter.GetBytes(name.Length).CopyTo(ret, offset);
-            offset += sizeof(int);
-
-            name.CopyTo(ret, offset);
-            offset += name.Length;
+            ret[offset] = (byte)name;
+            offset += sizeof(ItemIDs);
 
             ret[offset] = (byte)world;
             offset += sizeof(WorldIDs);
@@ -203,13 +269,8 @@ namespace KhTracker
 
         public int FromByte(byte[] data, int offset)
         {
-            int length;
-
-            length = BitConverter.ToInt32(data, offset);
-            offset += sizeof(int);
-
-            sItemName = Encoding.UTF8.GetString(data, offset, length);
-            offset += length;
+            sItemName = ((ItemIDs)data[offset]).ToString();
+            offset += sizeof(ItemIDs);
 
             sWorldName = ((WorldIDs)data[offset]).ToString();
             offset += sizeof(WorldIDs);
@@ -266,6 +327,50 @@ namespace KhTracker
         }
     }
 
+    public class SyncMsg
+    {
+        public List<(ItemIDs, WorldIDs)> FoundItems;
+
+        public SyncMsg()
+        {
+            FoundItems = new List<(ItemIDs, WorldIDs)>();
+        }
+
+        public byte[] ToByte()
+        {
+            byte[] ret = new byte[sizeof(int) + (FoundItems.Count * 2)];
+            int offset = 0;
+
+            BitConverter.GetBytes(FoundItems.Count).CopyTo(ret, offset);
+            offset += sizeof(int);
+
+            foreach ((ItemIDs, WorldIDs) i in FoundItems)
+            {
+                ret[offset] = (byte)i.Item1;
+                ret[offset + 1] = (byte)i.Item2;
+                offset += 2;
+            }
+
+            return ret;
+        }
+
+        public int FromByte(byte[] data, int offset)
+        {
+            FoundItems.Clear();
+
+            int length = BitConverter.ToInt32(data, offset);
+            offset += sizeof(int);
+
+            for (int i = 0; i < length; ++i)
+            {
+                FoundItems.Add(((ItemIDs)data[offset], (WorldIDs)data[offset + 1]));
+                offset += 2;
+            }
+
+            return offset;
+        }
+    }
+
     public enum ClientState
     {
         Init,
@@ -301,7 +406,7 @@ namespace KhTracker
                     Item item = null;
                     var grid = data.WorldsData[worldName].worldGrid;
                     MainWindow window = ((MainWindow)Application.Current.MainWindow);
-                    foreach(Item i in data.Items)
+                    foreach (Item i in data.Items)
                     {
                         if (i.Name == itemName)
                         {
@@ -350,8 +455,9 @@ namespace KhTracker
             // route message to other clients
             if (!Network.MP.IsClient() && mpServer.Mode.bCoop)
             {
+                mpServer.AddItem(itemMsg.sItemName, itemMsg.sWorldName);
+                
                 //build update message
-                //ItemFoundMSG itemMsg = new ItemFoundMSG(itemName, worldName, add, manual);
                 byte[] byteItem = itemMsg.ToByte();
                 byte[] outMsg = new byte[sizeof(NetworkMessages) + byteItem.Length];
                 outMsg[0] = (byte)NetworkMessages.ItemFound;
