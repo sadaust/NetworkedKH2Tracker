@@ -105,7 +105,7 @@ namespace KhTracker
                 ClientUpdateStatus();
                 MultiplayerHost.IsEnabled = true;
                 MultiplayerJoin.Header = "Join Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
+                SetNetworkStatusBar("NetworkStatus: Disconnected", true);
 
                 networkTimer.Stop();
             }
@@ -328,17 +328,17 @@ namespace KhTracker
                 case ClientState.Join:
                     MultiplayerHost.IsEnabled = false;
                     MultiplayerJoin.Header = "Disconnect from Multiplayer";
-                    SetStatusBar("NetworkStatus: Joining", false);
+                    SetNetworkStatusBar("NetworkStatus: Joining", false);
                     break;
                 case ClientState.Running:
                     MultiplayerHost.IsEnabled = false;
                     MultiplayerJoin.Header = "Disconnect from Multiplayer";
-                    SetStatusBar("NetworkStatus: Connected", false);
+                    SetNetworkStatusBar("NetworkStatus: Connected", false);
                     break;
                 case ClientState.Disconnected:
                     MultiplayerHost.IsEnabled = true;
                     MultiplayerJoin.Header = "Disconnect from Multiplayer";
-                    SetStatusBar("NetworkStatus: Joining", false);
+                    SetNetworkStatusBar("NetworkStatus: Joining", false);
                     break;
                 default:
                     throw new InvalidOperationException("Client is an unsupported state");

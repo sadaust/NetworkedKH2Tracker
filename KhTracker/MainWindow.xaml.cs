@@ -1056,6 +1056,12 @@ namespace KhTracker
             return points;
         }
 
+        public void SetNetworkStatusBar(string msg, bool isError)
+        {
+            NetworkStatus.Header = msg;
+            NetworkStatus.Foreground = isError ? errorColor : runningColor;
+        }
+
         private Dictionary<string, string> GetGhostType = new Dictionary<string, string>()
         {
             {"Ghost_Report1", "report"},

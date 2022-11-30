@@ -10,19 +10,20 @@ namespace KhTracker
     public partial class MainWindow : Window
     {
         private MPServer mpServer = new MPServer();
+        private const double timeOutSeconds = 30;
         private void HostUpdateStatus()
         {
             if (Network.MP.IsRunning())
             {
                 MultiplayerJoin.IsEnabled = false;
                 MultiplayerHost.Header = "Stop Server";
-                SetStatusBar("NetworkStatus: Connected", false);
+                SetNetworkStatusBar("NetworkStatus: Connected", false);
             }
             else
             {
                 MultiplayerJoin.IsEnabled = true;
                 MultiplayerHost.Header = "Host Multiplayer";
-                SetStatusBar("NetworkStatus: Disconnected", true);
+                SetNetworkStatusBar("NetworkStatus: Disconnected", true);
             }
         }
 
@@ -42,6 +43,27 @@ namespace KhTracker
                         msgStart = handler(msgStart, msg.Message, msg.Source);
                     else
                         msgStart = OnInvalidMSG(msgStart, msg.Message, msg.Source);
+                }
+            }
+            //
+            List<int> ClientsToDissconect = null;
+            var ClientStatusList = Network.MP.server.GetAllClientStatus();
+            foreach(var clientStatus in ClientStatusList)
+            {
+                if(clientStatus.CurrentState == ClientState.Join && clientStatus.DurationInStatus.TotalSeconds >= timeOutSeconds)
+                {
+                    if (ClientsToDissconect == null)
+                        ClientsToDissconect = new List<int>();
+
+                    ClientsToDissconect.Add(clientStatus.ClientID);
+                }
+            }
+
+            if(ClientsToDissconect != null)
+            {
+                foreach(int id in ClientsToDissconect)
+                {
+                    Network.MP.server.RemoveClient(id);
                 }
             }
             //Server shutdown

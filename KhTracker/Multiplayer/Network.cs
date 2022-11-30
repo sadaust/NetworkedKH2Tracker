@@ -20,12 +20,6 @@ namespace KhTracker
         private static readonly SolidColorBrush errorColor = new SolidColorBrush(Color.FromRgb(0xff, 0x00, 0x00));
         private static readonly SolidColorBrush runningColor = new SolidColorBrush(Color.FromRgb(0x00, 0x80, 0x00));
 
-        private void SetStatusBar(string msg, bool isError)
-        {
-            NetworkStatus.Header = msg;
-            NetworkStatus.Foreground = isError ? errorColor : runningColor;
-        }
-
         private void NetworkTimerStart(EventHandler OnTick)
         {
             if (networkTimer != null)
@@ -481,6 +475,21 @@ namespace KhTracker
                 elapsed = source.TimeInCurrentState();
                 return true;
             }
+
+            public List<(int ClientID, ClientState CurrentState, TimeSpan DurationInStatus)> GetAllClientStatus()
+            {
+                List<(int ClientID, ClientState CurrentState, TimeSpan DurationInStatus)> statusList = new List<(int ClientID, ClientState CurrentState, TimeSpan DurationInStatus)>();
+
+                lock(this)
+                {
+                    foreach(cWorker ClientWorker in clients)
+                    {
+                        statusList.Add((ClientWorker.id, ClientWorker.state, ClientWorker.TimeInCurrentState()));
+                    }
+                }
+
+                return statusList;
+            }
             public bool GetClientStatus(int id, out ClientState curState, out TimeSpan elapsed)
             {
                 cWorker source = null;
@@ -652,7 +661,6 @@ namespace KhTracker
 
             private readonly TcpClient sock;
             private readonly Stream ns;
-            private int extra;
             private DateTime StateStart;
             public ClientState state;
             public int id;
@@ -687,8 +695,8 @@ namespace KhTracker
 
             public void Start()
             {
-                state = ClientState.Join;
-                
+                ChangeState(ClientState.Join);
+
                 new Thread(Run).Start();
             }
 
